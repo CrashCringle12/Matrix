@@ -13,7 +13,7 @@ public class VPNListener implements Listener {
     public static void onJoin(PlayerJoinEvent e) {
         Util.isUsingVPN(e.getPlayer(), (hasVPN) -> {
             if (hasVPN) {
-                Bukkit.getScheduler().runTask(Matrix.getPlugin(), () -> {
+                Bukkit.getScheduler().runTask(Matrix.inst(), () -> {
                     e.getPlayer().kickPlayer(ChatColor.RED + "Using VPNs or Proxies is not allowed!");
                 });
             }

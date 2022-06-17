@@ -5,21 +5,17 @@ import me.s1mple.matrix.MatrixMethods;
 import me.s1mple.matrix.Util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.event.entity.EntityAirChangeEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
+
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PermsListener implements Listener {
@@ -64,10 +60,10 @@ public class PermsListener implements Listener {
           player.sendMessage("&4Your soul is too pure to enter");
           event.setCancelled(true);
       }  
-      if (!player.hasPermission("quest.time.Past") && event.getTo().getWorld().getName().contains("em_oasis")) {
-          player.sendMessage("&4You cannot travel to the past yet");
-          event.setCancelled(true);
-      }  
+//      if (!player.hasPermission("quest.time.Past") && event.getTo().getWorld().getName().contains("em_oasis")) {
+//          player.sendMessage("&4You cannot travel to the past yet");
+//          event.setCancelled(true);
+//      }
     }
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
@@ -89,8 +85,8 @@ public class PermsListener implements Listener {
             if (event.getMessage().startsWith("/warp ") && event
               .getMessage().split(" ")[1].toLowerCase().contains("elite")) {
               event.setCancelled(true);
-              BukkitScheduler scheduler = Matrix.getPlugin().getServer().getScheduler();
-              scheduler.scheduleSyncDelayedTask((Plugin)Matrix.getPlugin(), new Runnable() {
+              BukkitScheduler scheduler = Matrix.inst().getServer().getScheduler();
+              scheduler.scheduleSyncDelayedTask((Plugin)Matrix.inst(), new Runnable() {
                     public void run() {
                       if (event.getMessage().split(" ")[1].toLowerCase().contains("guild")) {
                         Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), "mv tp " + event
@@ -106,8 +102,8 @@ public class PermsListener implements Listener {
                   }, 60L);
             } else if (event.getMessage().startsWith("/ag")) {
               event.setCancelled(true);
-              BukkitScheduler scheduler = Matrix.getPlugin().getServer().getScheduler();
-              scheduler.scheduleSyncDelayedTask((Plugin)Matrix.getPlugin(), new Runnable() {
+              BukkitScheduler scheduler = Matrix.inst().getServer().getScheduler();
+              scheduler.scheduleSyncDelayedTask((Plugin)Matrix.inst(), new Runnable() {
                     public void run() {
                       Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), "mv tp " + event.getPlayer().getName() + " a:Future");
                     }

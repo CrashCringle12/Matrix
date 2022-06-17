@@ -1,10 +1,10 @@
 main: me.s1mple.matrix.Matrix
 name: MatrixPlugin
 version: ${project.version}
-author: S1mple, CrashCringle12
-depend: [LuckPerms, LibsDisguises, VampireRevamp, SkillsPro, CustomDimensions, Factions, Massivecore]
+author: CrashCringle12, S1mple
+softdepend: [LuckPerms, LibsDisguises, VampireRevamp, SkillsPro, CringleBosses]
 description: Matrix Plugin.
-api-version: 1.14
+api-version: 1.18
 commands:
   matrix:
     description: Shows help on the plugin.

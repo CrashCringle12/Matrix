@@ -40,22 +40,22 @@ public class Util {
      * @return Matrix plugin
      */
     static public Matrix getPlugin() {
-        return Matrix.plugin;
+        return Matrix.instance;
     }
 
     public static String color(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
 
-    public static File getSchematicFile(String schemFileName) {
-        File schem = (new File("." + File.separator + Matrix.getPlugin().getWorldEditPlugin(), "schematics/" + File.separator + schemFileName + ".schem"));
-        if (!schem.exists())
-            schem = (new File("." + File.separator + Matrix.getPlugin().getWorldEditPlugin().getDataFolder(), "schematics/" + File.separator + schemFileName + ".schematic"));
-        if (!schem.exists())
-            schem = (new File("." + File.separator + Matrix.getPlugin().getWorldEditPlugin().getDataFolder(), "schematics/" + File.separator + schemFileName));
-
-        return schem;
-    }
+//    public static File getSchematicFile(String schemFileName) {
+//        File schem = (new File("." + File.separator + Matrix.inst().getWorldEditPlugin(), "schematics/" + File.separator + schemFileName + ".schem"));
+//        if (!schem.exists())
+//            schem = (new File("." + File.separator + Matrix.inst().getWorldEditPlugin().getDataFolder(), "schematics/" + File.separator + schemFileName + ".schematic"));
+//        if (!schem.exists())
+//            schem = (new File("." + File.separator + Matrix.inst().getWorldEditPlugin().getDataFolder(), "schematics/" + File.separator + schemFileName));
+//
+//        return schem;
+//    }
 
     /**
      * Sends GET Request to URL and returns response

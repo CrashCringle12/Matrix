@@ -18,15 +18,15 @@ public class Arena {
     private Location pastePosition;
 
     public Arena(String name, String schemFileName, Location loc) {
-        this.name = name;
-        this.schem = Util.getSchematicFile(schemFileName);
-        this.pastePosition = loc;
+//        this.name = name;
+//        this.schem = Util.getSchematicFile(schemFileName);
+//        this.pastePosition = loc;
     }
 
     public Arena(String name, File schemFile, Location loc) {
-        this.name = name;
-        this.schem = schemFile;
-        this.pastePosition = loc;
+//        this.name = name;
+//        this.schem = schemFile;
+//        this.pastePosition = loc;
     }
 
     /**

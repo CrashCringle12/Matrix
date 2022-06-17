@@ -1,5 +1,6 @@
 package me.s1mple.matrix.Raid;
 
+import me.crashcringle.cringlebosses.CringleBoss;
 import me.s1mple.matrix.Matrix;
 import me.s1mple.matrix.MatrixMethods;
 
@@ -36,24 +37,23 @@ public class RaidListener implements Listener {
 	public void onStartRaid(RaidTriggerEvent event) {
 
 		// Check if player with Bad Omen is above level 60
-		if (SkilledPlayer.getSkilledPlayer(event.getPlayer()).getLevel() >= 60 || forceStart) {
+		if (SkilledPlayer.getSkilledPlayer(event.getPlayer()).getLevel() >= 50 || forceStart) {
 			// If the player is above level 60 then there is a 1/5 chance that a Pirate Raid
 			// occurs
 			num = forceStart ? 5 : (int) (Math.random() * 100) + 1;
 
-			System.out.println(num);
 			if (num % 5 == 0) {
 
 				// Depending on the result of the player's previous raid, broadcast a message
 				// accordingly.
-				if (event.getPlayer().hasPermission("quest.raid.Pirate.Lose"))
-					Bukkit.broadcastMessage("&ePirates have returned to finish what they started &b"
-							+ event.getPlayer().getName() + "&e!");
-				else if (event.getPlayer().hasPermission("quest.raid.Pirate.Win"))
-					Bukkit.broadcastMessage("&eThe Pirates have returned with a vengeance for &b"
-							+ event.getPlayer().getName() + "&e!");
+				if (event.getPlayer().hasPermission("matrix.raid.Pirate.Lose"))
+					Bukkit.broadcastMessage("§ePirates have returned to finish what they started §b"
+							+ event.getPlayer().getName() + "§e!");
+				else if (event.getPlayer().hasPermission("matrix.raid.Pirate.Win"))
+					Bukkit.broadcastMessage("§eThe Pirates have returned with a vengeance for §b"
+							+ event.getPlayer().getName() + "§e!");
 				else
-					Bukkit.broadcastMessage("&ePirates are invading &b" + event.getPlayer().getName() + "&e!");
+					Bukkit.broadcastMessage("§ePirates are invading §b" + event.getPlayer().getName() + "§e!");
 
 				// We want max levels for the raid so that all possible entities spawn
 				event.getRaid().setBadOmenLevel(5);
@@ -67,8 +67,8 @@ public class RaidListener implements Listener {
 
 				// They need some tunes for the raid
 				playPigStep(event.getRaid(), event.getPlayer());
-				BukkitScheduler scheduler = Matrix.getPlugin().getServer().getScheduler();
-				scheduler.scheduleSyncDelayedTask(Matrix.getPlugin(), new Runnable() {
+				BukkitScheduler scheduler = Matrix.inst().getServer().getScheduler();
+				scheduler.scheduleSyncDelayedTask(Matrix.inst(), new Runnable() {
 					@Override
 					public void run() {
 						playPigStep(event.getRaid(), event.getPlayer());
@@ -98,41 +98,15 @@ public class RaidListener implements Listener {
 	@EventHandler
 	public void onEndRaid(RaidStopEvent event) {
 		if (num % 5 == 0) {
-			if (event.getRaid().getStatus() == Raid.RaidStatus.VICTORY) {
-				for (UUID apple : event.getRaid().getHeroes()) {
-					Player player = Bukkit.getPlayer(apple);
-					if (player != null) {
-						player.sendMessage("You have survived the Pirate Invasion");
-						if (((Math.random() * 100) + 1) > 50)
-							MatrixMethods.ConsoleCmd("mgive " + player.getName() + " elondshead 1");
-						MatrixMethods.ConsoleCmd(
-								"mgive " + player.getName() + " FadedSoul " + (int) (((Math.random() * 100) + 1) / 4));
-						MatrixMethods.ConsoleCmd(
-								"mgive " + player.getName() + " chaojuice " + (int) (((Math.random() * 200) + 0) / 4));
-						MatrixMethods.ConsoleCmd("mgive " + player.getName() + " Enchanted_Golden_Apple "
-								+ (int) (((Math.random() * 260) + 0) / 3));
-						MatrixMethods.ConsoleCmd("mgive " + player.getName() + " ChemicalX 1");
-						MatrixMethods.ConsoleCmd("mgive " + player.getName() + " BadDayArrow "
-								+ (int) (((Math.random() * 100) + 0) / 4));
-						MatrixMethods.ConsoleCmd("mgive " + player.getName() + " LuckyBlock 1");
-						MatrixMethods.ConsoleCmd(
-								"mgive " + player.getName() + " ParrotEgg " + (int) (((Math.random() * 100) + 0) / 4));
-						MatrixMethods.addPermission(player, "quest.raid.Pirate.Win");
-						MatrixMethods.removePermission(player, "quest.raid.Pirate.Lose");
+			for (UUID heroes : event.getRaid().getHeroes()) {
+				Player player = Bukkit.getPlayer(heroes);
+				if (player != null) {
+					if (event.getRaid().getStatus() == Raid.RaidStatus.VICTORY) {
+						pirateRaidRewards(player);
 					}
-				}
-			} else {
-				Bukkit.broadcastMessage("Pirates have successfully pillaged our heroes!");
-				for (UUID apple : event.getRaid().getHeroes()) {
-					Player player = Bukkit.getPlayer(apple);
-					if (player != null) {
-						player.sendMessage("The Pirates have stolen your cheese!");
-						MatrixMethods.removePermission(player, "quest.raid.Pirate.Win");
-						MatrixMethods.addPermission(player, "quest.raid.Pirate.Lose");
-
-						MatrixMethods.ConsoleCmd("eco take " + player.getName() + " 15%");
+					else {
+						pirateRaidConsequence(player);
 					}
-
 				}
 			}
 			num = 1;
@@ -143,53 +117,80 @@ public class RaidListener implements Listener {
 	public void onRaid(RaidSpawnWaveEvent event) {
 		System.out.println(num);
 		if (num % 5 == 0) {
-			if (pirateRaid == event.getRaid()) {
-				System.out.println("Raids are Equal");
+			pirateRaidWaves(event);
+		}
+	}
+	public void pirateRaidConsequence(Player player) {
+		Bukkit.broadcastMessage("§ePirates have successfully pillaged our heroes!");
+		player.sendMessage("§eThe Pirates have stolen your cheese!");
+		MatrixMethods.removePermission(player, "matrix.raid.Pirate.Win");
+		MatrixMethods.addPermission(player, "matrix.raid.Pirate.Lose");
+		MatrixMethods.ConsoleCmd("eco take " + player.getName() + " 10%");
+	}
+	public void pirateRaidRewards(Player player) {
+			player.sendMessage("§eYou have survived the Pirate Invasion");
+			int reward = (int) (Math.random() * 100) + 1;
+			if (reward > 75)
+				MatrixMethods.ConsoleCmd("em give " + player.getName() + " unbind_scroll.yml");
+			if (reward % 10 == 0)
+				MatrixMethods.ConsoleCmd(
+						"mgive " + player.getName() + " PirateParrotEgg " + (int) (Math.random() * 10) + 1);
+			if (reward % 15 == 0)
+				MatrixMethods.ConsoleCmd("mgive " + player.getName() + " ChemicalX 1");
+			if (reward % 20 == 0)
+				MatrixMethods.ConsoleCmd("mgive " + player.getName() + " BadDayArrow "
+						+ (int) (Math.random() * 100));
+			if (reward % 30 == 0)
+				MatrixMethods.ConsoleCmd(
+						"mgive " + player.getName() + " chaojuice " + (int) (Math.random() * 4));
+			if (reward % 5 == 0)
+				MatrixMethods.ConsoleCmd("mgive " + player.getName() + " Enchanted_Golden_Apple "
+						+ (int) (Math.random() * 10));
+			if (reward % 2 == 0 )
+				MatrixMethods.ConsoleCmd(
+						"mgive " + player.getName() + " ChaosSoul " + (int) (((Math.random() * 2) + 1)));
+			MatrixMethods.addPermission(player, "matrix.raid.Pirate.Win");
+			MatrixMethods.removePermission(player, "matrix.raid.Pirate.Lose");
+	}
+	/**
+	 * This method is called within the onRaid event to
+	 * turn the raid into a Pirate Raid. It handles the mob spawns
+	 * and disguises
+	 * @param event The given wave of raiders
+	 */
+	public void pirateRaidWaves(RaidSpawnWaveEvent event) {
+		PlayerDisguise playerDisguise;
+		for (Raider raider : event.getRaiders()) {
+			if (raider.getHealth() <= 40) {
+				raider.setMaxHealth(100);
+				raider.setHealth(100);
 			}
-			if (pirateLocation == event.getRaid().getLocation()) {
-				System.out.println("Locations are equal");
-			}
-			PlayerDisguise playerDisguise;
-			for (Raider raider : event.getRaiders()) {
-				if (raider.getMaxHealth() <= 40) {
-					raider.setMaxHealth(100);
-					raider.setHealth(100);
-
-				}
-				switch (raider.getType()) {
+			switch (raider.getType()) {
 				case VINDICATOR:
-					MatrixMethods.ConsoleCmd(
-							"mmob spawn Pirate " + raider.getLocation().getX() + " " + raider.getLocation().getY() + " "
-									+ raider.getLocation().getZ() + " " + raider.getLocation().getWorld().getName());
+					CringleBoss.spawnMagicMob("Pirate", raider.getLocation());
 					playerDisguise = new PlayerDisguise("_Tommy");
 					playerDisguise.setName("Pirate Runt");
 					playerDisguise.setEntity(raider);
 					playerDisguise.startDisguise();
 					break;
 				case PILLAGER:
-					System.out.println("mm m spawn Pirate 1" + raider.getLocation().getWorld().getName() + ","
-							+ raider.getLocation().getX() + "," + raider.getLocation().getY() + ","
-							+ raider.getLocation().getZ());
-					MatrixMethods.ConsoleCmd("mm m spawn Pirate 1 Episode1," + raider.getLocation().getX() + ","
+					MatrixMethods.ConsoleCmd("mm m spawn Pirate 1 " + raider.getWorld().getName() + "," + raider.getLocation().getX() + ","
 							+ raider.getLocation().getY() + "," + raider.getLocation().getZ());
-					playerDisguise = new PlayerDisguise("PirateGirl");
+					CringleBoss.spawnMagicMob("Pirate", raider.getLocation());
+					playerDisguise = new PlayerDisguise("MatrixPirateGirl");
 					playerDisguise.setName("Pirate Archer");
 					playerDisguise.setEntity(raider);
 					playerDisguise.startDisguise();
 					break;
 				case EVOKER:
-					MatrixMethods.ConsoleCmd("mmob spawn PirateWizard " + raider.getLocation().getX() + " "
-							+ raider.getLocation().getY() + " " + raider.getLocation().getZ() + " "
-							+ raider.getLocation().getWorld().getName());
-					playerDisguise = new PlayerDisguise("PirateGhost");
+					CringleBoss.spawnMagicMob("PirateWizard", raider.getLocation());
+					playerDisguise = new PlayerDisguise("MatrixPirateGoblin");
 					playerDisguise.setName("Pirate Evoker");
 					playerDisguise.setEntity(raider);
 					playerDisguise.startDisguise();
 					break;
 				case WITCH:
-					MatrixMethods.ConsoleCmd("mmob spawn PirateWizard " + raider.getLocation().getX() + " "
-							+ raider.getLocation().getY() + " " + raider.getLocation().getZ() + " "
-							+ raider.getLocation().getWorld().getName());
+					CringleBoss.spawnMagicMob("PirateWizard", raider.getLocation());
 					playerDisguise = new PlayerDisguise("FemalePirate");
 					playerDisguise.setName("Alchemist");
 					playerDisguise.setEntity(raider);
@@ -199,18 +200,15 @@ public class RaidListener implements Listener {
 					playerDisguise.startDisguise();
 					break;
 				case ILLUSIONER:
-					playerDisguise = new PlayerDisguise("PirateGhost");
+					CringleBoss.spawnMagicMob("PirateGhost", raider.getLocation());
+					playerDisguise = new PlayerDisguise("ChaosPirateGhost");
 					playerDisguise.setName("Pirate Ghost");
 					playerDisguise.setEntity(raider);
 					playerDisguise.startDisguise();
 					break;
 				case RAVAGER:
-					MatrixMethods.ConsoleCmd("mmob spawn PirateGhost " + raider.getLocation().getX() + " "
-							+ raider.getLocation().getY() + " " + raider.getLocation().getZ() + " "
-							+ raider.getLocation().getWorld().getName());
-					MatrixMethods.ConsoleCmd("mmob spawn PirateLurker " + raider.getLocation().getX() + " "
-							+ raider.getLocation().getY() + " " + raider.getLocation().getZ() + " "
-							+ raider.getLocation().getWorld().getName());
+					CringleBoss.spawnMagicMob("PirateGhost", raider.getLocation());
+					CringleBoss.spawnMagicMob("PirateLurker", event.getRaid().getLocation());
 					break;
 				default:
 					playerDisguise = new PlayerDisguise("_Tommy");
@@ -218,7 +216,6 @@ public class RaidListener implements Listener {
 					playerDisguise.setEntity(raider);
 					playerDisguise.startDisguise();
 					break;
-				}
 			}
 		}
 	}

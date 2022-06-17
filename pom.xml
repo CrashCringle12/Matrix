@@ -6,70 +6,103 @@
 
 	<groupId>MatrixBending</groupId>
 	<artifactId>MatrixPlugin</artifactId>
-	<version>1.4.3</version>
+	<version>1.5.1</version>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<!--Repositories -->
 	<repositories>
 		<repository>
+			<id>Maven Central</id>
+			<url>https://repo1.maven.org/maven2/</url>
+		</repository>
+		<repository>
+			<id>paper-repo</id>
+			<url>https://repo.destroystokyo.com/repository/maven-public/</url>
+		</repository>
+
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+		<repository>
+			<id>sonatype-oss-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
+			<id>dmulloy2-repo</id>
+			<url>https://repo.dmulloy2.net/repository/public/</url>
 		</repository>
 		<repository>
 			<id>ess-repo</id>
 			<url>https://ci.ender.zone/plugin/repository/everything/</url>
 		</repository>
 		<repository>
-			<id>enginehub-maven</id>
-			<url>http://maven.enginehub.org/repo/</url>
-		</repository>
-
-		<repository>
 			<id>codemc-snapshots</id>
 			<url>https://repo.codemc.org/repository/maven-snapshots/</url>
 		</repository>
 		<repository>
+			<id>factions-repos</id>
+			<url>https://ci.ender.zone/plugin/repository/everything/</url>
+		</repository>
+		<repository>
 			<id>md_5-public</id>
-			<url>http://repo.md-5.net/content/groups/public/</url>
+			<url>https://repo.md-5.net/content/groups/public/</url>
 		</repository>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-		<repository>
-			<id>IntellectualSites</id>
-			<url>https://mvn.intellectualsites.com/content/repositories/releases/</url>
-		  </repository>
 </repositories>
 
 	<dependencies>
-	<dependency>
+		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<version>1.18.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.crashcringle</groupId>
+			<artifactId>CringleBosses</artifactId>
+			<version>1.18.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/util/CringleBosses v1.0.0.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>org.spigotmc</groupId>
-			<artifactId>itsSpigot</artifactId>
-			<version>1.16.5</version>
+			<artifactId>PaperSpigot</artifactId>
+			<version>1.18.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/util/PaperSpigot.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>LibsDisguises</groupId>
 			<artifactId>LibsDisguises</artifactId>
-			<version>10.0.15</version>
+			<version>10.0.22</version>
 		</dependency>
 	
 		<dependency>
 			<groupId>com.github.ProjectKorra</groupId>
 			<artifactId>ProjectKorra</artifactId>
-			<version>1.9.0</version>
+			<version>1.9.3</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>3.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>Factions</artifactId>
+			<version>1.6.9.5-U0.6.9</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>net.ess3</groupId>
 			<artifactId>EssentialsX</artifactId>
@@ -81,6 +114,8 @@
 			<groupId>com.skills</groupId>
 			<artifactId>skills</artifactId>
 			<version>1.8.9</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/util/SkillsPro.jar</systemPath>
 		</dependency>
 		 <dependency>
 		    <groupId>com.github.dmulloy2</groupId>
@@ -91,39 +126,60 @@
 			<groupId>com.vampirerevamp</groupId>
 			<artifactId>vampirerevamp</artifactId>
 			<version>1.0.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/util/VampireRevamp.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>com.factions</groupId>
-			<artifactId>factions</artifactId>
+			<groupId>com.magmaguy</groupId>
+			<artifactId>EliteMobs</artifactId>
 			<version>1.0.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/util/EliteMobs.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>com.massivecore</groupId>
-			<artifactId>Massivecore</artifactId>
-			<version>1.0.3</version>
+			<groupId>com.comphenix.protocol</groupId>
+			<artifactId>ProtocolLib</artifactId>
+			<version>4.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.elmakers.mine.bukkit</groupId>
+			<artifactId>Magic</artifactId>
+			<version>10.8.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/util/Magic.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.22</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.Slimefun</groupId>
+			<artifactId>Slimefun4</artifactId>
+			<version>RC-31</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>io.github.baked-libs</groupId>
+					<artifactId>dough-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.luckperms</groupId>
 			<artifactId>api</artifactId>
-			<version>5.1</version>
+			<version>5.4</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.16</version>
+			<version>8.0.29</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.intellectualsites.fawe</groupId>
-			<artifactId>FAWE-Bukkit</artifactId>
-			<version>1.16-434</version>
-		  </dependency>
 	</dependencies>
 
 	<build>
-		<defaultGoal>clean package install</defaultGoal>
+		<defaultGoal>clean package</defaultGoal>
 		<finalName>${project.name}-${project.version}</finalName>
 		<sourceDirectory>${project.basedir}/src</sourceDirectory>
 		<resources>
@@ -141,87 +197,23 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.0</version>
 				<configuration>
-					<source>8</source>
-					<target>8</target>
+					<relocations>
+						<relocation>
+							<pattern>org.bstats</pattern>
+							<!-- Replace this with your package! -->
+							<shadedPattern>your.package</shadedPattern>
+						</relocation>
+					</relocations>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<version>2.5.2</version>
 				<executions>
 					<execution>
-						<id>1</id>
-						<phase>initialize</phase>
+						<phase>package</phase>
 						<goals>
-							<goal>install-file</goal>
+							<goal>shade</goal>
 						</goals>
-						<configuration>
-							<groupId>com.factions</groupId>
-							<artifactId>factions</artifactId>
-							<version>1.0.3</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/util/Factions.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>appengine-api-stubs</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>com.massivecore</groupId>
-							<artifactId>MassiveCore</artifactId>
-							<version>1.0.3</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/util/MassiveCore.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>vampirerevamp</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>com.vampirerevamp</groupId>
-							<artifactId>vampirerevamp</artifactId>
-							<version>1.0.3</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/util/VampireRevamp.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>itsSpigot</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>org.spigotmc</groupId>
-							<artifactId>itsSpigot</artifactId>
-							<version>1.16.5</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/util/spigot-1.16.5.jar</file>
-						</configuration>
-					</execution>
-					<execution>
-						<id>skills</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>com.skills</groupId>
-							<artifactId>skills</artifactId>
-							<version>1.8.9</version>
-							<packaging>jar</packaging>
-							<file>${project.basedir}/util/SkillsPro.jar</file>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>

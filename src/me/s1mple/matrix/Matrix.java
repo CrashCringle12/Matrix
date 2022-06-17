@@ -1,15 +1,16 @@
 package me.s1mple.matrix;
 
 import com.clanjhoo.vampire.VampireRevamp;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+
+import com.elmakers.mine.bukkit.api.magic.MagicAPI;
+import com.google.gson.Gson;
 import me.libraryaddict.disguise.LibsDisguises;
-import me.s1mple.matrix.ArenaManager.ArenaManager;
 import me.s1mple.matrix.Listener.PermsListener;
 import me.s1mple.matrix.Listener.SkillsListener;
 import me.s1mple.matrix.Listener.VPNListener;
+import me.s1mple.matrix.Protocols.WrapperPlayServerGameStateChange;
 import me.s1mple.matrix.Raid.RaidListener;
 import me.s1mple.matrix.Skills.Werewolf;
-import me.s1mple.matrix.Tournament.TournamentHandler;
 import me.s1mple.matrix.Util.Glow;
 import me.s1mple.matrix.Util.Util;
 import net.luckperms.api.LuckPerms;
@@ -20,95 +21,72 @@ import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.skills.main.SkillsPro;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.UUID;
-import com.clanjhoo.vampire.VampireRevamp;
+
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.massivecraft.factions.Factions;
-import com.massivecraft.massivecore.MassiveCore;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-import me.libraryaddict.disguise.LibsDisguises;
+
 import me.s1mple.matrix.Listener.DreamListener;
-import me.s1mple.matrix.Listener.PermsListener;
-import me.s1mple.matrix.Listener.SkillsListener;
-import me.s1mple.matrix.Raid.RaidListener;
-import me.s1mple.matrix.Skills.Werewolf;
-import me.s1mple.matrix.Util.Glow;
-import me.s1mple.matrix.Util.Util;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
-import net.minecraft.server.v1_16_R3.EntityPlayer;
-import net.minecraft.server.v1_16_R3.PacketPlayOutGameStateChange;
-import net.minecraft.server.v1_16_R3.PacketPlayOutGameStateChange.a;
+
 
 public class Matrix extends JavaPlugin {
-	public static Matrix plugin;
+	public static Matrix instance;
 	public static ConfigManager configManager;
 	public static String version = "1.10";
 	public static String author = "S1mpleCrash";
-	private WorldEditPlugin worldEditPlugin;
 	private SkillsPro skillsapi;
 	private VampireRevamp revamp;
 	private LibsDisguises disguise;
 	private LuckPerms api;
-	private Factions factions;
-	private MassiveCore massivecore;
+
+	protected static Gson gson;
+
+	public static MagicAPI magicAPI;
+
 	private ProtocolManager protocolManager;
 	@Override
 	public void onEnable() {
 
-		this.plugin = this;
-		this.configManager = new ConfigManager(this);
+		instance = this;
+		configManager = new ConfigManager(this);
 
-		this.worldEditPlugin = ((WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit"));
-		this.skillsapi = ((SkillsPro) plugin.getServer().getPluginManager().getPlugin("SkillsPro"));
-		this.revamp = ((VampireRevamp) plugin.getServer().getPluginManager().getPlugin("VampireRevamp"));
-		this.disguise = ((LibsDisguises) plugin.getServer().getPluginManager().getPlugin("LibsDisguises"));
+		this.skillsapi = ((SkillsPro) instance.getServer().getPluginManager().getPlugin("SkillsPro"));
+		this.revamp = ((VampireRevamp) instance.getServer().getPluginManager().getPlugin("VampireRevamp"));
 		this.api = LuckPermsProvider.get();
-		this.factions = ((Factions) plugin.getServer().getPluginManager().getPlugin("Factions"));
-		this.massivecore = ((MassiveCore) plugin.getServer().getPluginManager().getPlugin("MassiveCore"));
 		protocolManager = ProtocolLibrary.getProtocolManager();
 		registerGlow();
 		new Werewolf();
 
-		ArenaManager.init(this);
+		//ArenaManager.init(this);
 		// BattlePass.init(this);
-		TournamentHandler.init(this);
-		plugin.getServer().getPluginManager().registerEvents(new DreamListener(), Matrix.plugin);
-		plugin.getServer().getPluginManager().registerEvents(new SkillsListener(), Matrix.plugin);
-		plugin.getServer().getPluginManager().registerEvents(new VPNListener(), Matrix.plugin);
-		plugin.getServer().getPluginManager().registerEvents(new PermsListener(), Matrix.plugin);
-		plugin.getServer().getPluginManager().registerEvents(new RaidListener(), Matrix.plugin);
+		//TournamentHandler.init(this);
+		instance.getServer().getPluginManager().registerEvents(new DreamListener(), Matrix.instance);
+		instance.getServer().getPluginManager().registerEvents(new SkillsListener(), Matrix.instance);
+		instance.getServer().getPluginManager().registerEvents(new VPNListener(), Matrix.instance);
+		instance.getServer().getPluginManager().registerEvents(new PermsListener(), Matrix.instance);
+		instance.getServer().getPluginManager().registerEvents(new RaidListener(), Matrix.instance);
 	}
 
 	@Override
 	public void onDisable() {
 		getLogger().info("MatrixPlugin is stopping...");
-		this.plugin.saveConfig();
+		this.instance.saveConfig();
 	}
 
 	public void displayCredits(Player p) {
-		CraftPlayer craft = (CraftPlayer) p;
-		EntityPlayer nms = craft.getHandle();
-		nms.viewingCredits = true;
-
-		((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutGameStateChange(new a(4), 1));
-		/*
-		 * PacketContainer credits = ProtocolLibrary.getProtocolManager()
-		 * .createPacket(PacketType.Play.Server.GAME_STATE_CHANGE);
-		 * credits.getBytes().write(0, (byte) 4); credits.getFloat().write(1, 0.0F); try
-		 * { ProtocolLibrary.getProtocolManager().sendServerPacket(p, credits); } catch
-		 * (InvocationTargetException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); }
-		 */
+		WrapperPlayServerGameStateChange gamestateChange = new WrapperPlayServerGameStateChange();
+		gamestateChange.setReason(4);
+		gamestateChange.setValue(1);
+		gamestateChange.sendPacket(p);
 	}
 
 	/**
@@ -123,7 +101,7 @@ public class Matrix extends JavaPlugin {
 			e.printStackTrace();
 		}
 		try {
-			Glow glow = new Glow(new NamespacedKey(Matrix.plugin, "glow_ench"));
+			Glow glow = new Glow(new NamespacedKey(Matrix.instance, "glow_ench"));
 			Enchantment.registerEnchantment(glow);
 		} catch (IllegalArgumentException e) {
 		} catch (Exception e) {
@@ -179,7 +157,7 @@ public class Matrix extends JavaPlugin {
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("forceCredits")) {
-					if (sender instanceof Player && sender instanceof Player && args.length >= 2
+					if (sender instanceof Player && args.length >= 2
 							&& sender.hasPermission("matrix.forceCredits")) {
 						displayCredits((Player) Bukkit.getPlayer(args[1]));
 						return true;
@@ -200,7 +178,7 @@ public class Matrix extends JavaPlugin {
 						}
 					} else if (args.length == 2) {
 						if (args[1].equalsIgnoreCase("add")) {
-							sender.sendMessage(addVpnKeyForPlayer(plugin.getServer().getPlayer(args[2])));
+							sender.sendMessage(addVpnKeyForPlayer(instance.getServer().getPlayer(args[2])));
 							return true;
 						}
 					}
@@ -232,10 +210,23 @@ public class Matrix extends JavaPlugin {
 	/**
 	 * @return Plugin instance
 	 */
-	public static Matrix getPlugin() {
-		return plugin;
+	public static Matrix inst() {
+		return instance;
 	}
-
+	public LibsDisguises getLibsDisguisesAPI() {
+		Plugin libsDisguises = Bukkit.getPluginManager().getPlugin("LibsDisguises");
+		if (!(libsDisguises instanceof LibsDisguises)) {
+			return null;
+		}
+		return (LibsDisguises) libsDisguises;
+	}
+	public MagicAPI getMagicAPI() {
+		Plugin magicPlugin = Bukkit.getPluginManager().getPlugin("Magic");
+		if (magicPlugin == null || !(magicPlugin instanceof MagicAPI)) {
+			return null;
+		}
+		return (MagicAPI)magicPlugin;
+	}
 	public VampireRevamp getRevamp() {
 		return revamp;
 	}
@@ -248,12 +239,15 @@ public class Matrix extends JavaPlugin {
 		return skillsapi;
 	}
 
-	public WorldEditPlugin getWorldEditPlugin() {
-		return worldEditPlugin;
-	}
 
 	public LuckPerms getLuckPerms() {
 		return api;
 	}
 
+	public static Gson getGson() {
+		if (gson == null) {
+			gson = new Gson();
+		}
+		return gson;
+	}
 }
