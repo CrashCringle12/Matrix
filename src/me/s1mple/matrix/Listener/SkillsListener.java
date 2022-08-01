@@ -26,13 +26,15 @@ public class SkillsListener implements Listener{
 
 		@EventHandler
 		public void firebendingListener(AbilityDamageEntityEvent event) {
-			if ((event.getAbility().getElement() == Element.FIRE) && VampireAPI.isVampire(event.getSource())) {
-				event.getSource().damage(event.getDamage());
-				event.getSource().setFireTicks(80);
-				event.setCancelled(true);
-				event.setDamage(0);
-			}
+			if (event.getSource() != null)
+				if ((event.getAbility().getElement() == Element.FIRE) && VampireAPI.isVampire(event.getSource())) {
+					event.getSource().damage(event.getDamage());
+					event.getSource().setFireTicks(80);
+					event.setCancelled(true);
+					event.setDamage(0);
+				}
 		}
+
 	   @EventHandler
 		public void vampCmdListener(VampireTypeChangeEvent event) {
 		   Player player = event.getUplayer().getPlayer();
@@ -56,5 +58,5 @@ public class SkillsListener implements Listener{
 			
 		    api.getUserManager().saveUser(Objects.requireNonNull(api.getUserManager().getUser(player.getUniqueId())));
 		}
-	  
+
 }

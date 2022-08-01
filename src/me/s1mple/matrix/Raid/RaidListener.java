@@ -162,12 +162,12 @@ public class RaidListener implements Listener {
 		PlayerDisguise playerDisguise;
 		for (Raider raider : event.getRaiders()) {
 			if (raider.getHealth() <= 40) {
-				raider.setMaxHealth(100);
-				raider.setHealth(100);
+				raider.setMaxHealth(300);
+				raider.setHealth(300);
 			}
 			switch (raider.getType()) {
 				case VINDICATOR:
-					CringleBoss.spawnMagicMob("Pirate", raider.getLocation());
+					CringleBoss.spawnMagicMob("PirateBrute", raider.getLocation());
 					playerDisguise = new PlayerDisguise("_Tommy");
 					playerDisguise.setName("Pirate Runt");
 					playerDisguise.setEntity(raider);

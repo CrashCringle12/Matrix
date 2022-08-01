@@ -48,18 +48,22 @@ public class PermsListener implements Listener {
     @EventHandler
     public void WorldChange(PlayerTeleportEvent event) {
       Player player = event.getPlayer();
-      if (!player.hasPermission("quest.time.Future") && event.getTo().getWorld().getName().contains("waterworld")) {
+      if (!player.hasPermission("matrix.quest.time.Future") && event.getTo().getWorld().getName().contains("Aerie_City")) {
           player.sendMessage("&bYou cannot travel to the future yet");
           event.setCancelled(true);
       }  
-      if (!player.hasPermission("quest.time.Limbo") && event.getTo().getWorld().getName().contains("dream")) {
+      if (!player.hasPermission("matrix.quest.time.Limbo") && event.getTo().getWorld().getName().contains("dream")) {
           player.sendMessage("&bYou cannot travel to other dreams yet");
           event.setCancelled(true);
       }  
-      if (!player.hasPermission("quest.time.Corrupted") && event.getTo().getWorld().getName().contains("em_dark_spire")) {
+      if (!player.hasPermission("matrix.quest.time.Corrupted") && event.getTo().getWorld().getName().contains("em_dark_spire")) {
           player.sendMessage("&4Your soul is too pure to enter");
           event.setCancelled(true);
-      }  
+      }
+        if (!player.hasPermission("matrix.quest.time.Purgatory") && event.getTo().getWorld().getName().contains("purgatory")) {
+            player.sendMessage("&4You have yet to be chosen");
+            event.setCancelled(true);
+        }
 //      if (!player.hasPermission("quest.time.Past") && event.getTo().getWorld().getName().contains("em_oasis")) {
 //          player.sendMessage("&4You cannot travel to the past yet");
 //          event.setCancelled(true);
@@ -81,34 +85,35 @@ public class PermsListener implements Listener {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to do that!");
         }
-        if (event.getPlayer().hasPermission("quest.time.Future"))
+        if (event.getPlayer().hasPermission("matrix.quest.time.Future"))
             if (event.getMessage().startsWith("/warp ") && event
               .getMessage().split(" ")[1].toLowerCase().contains("elite")) {
-              event.setCancelled(true);
-              BukkitScheduler scheduler = Matrix.inst().getServer().getScheduler();
-              scheduler.scheduleSyncDelayedTask((Plugin)Matrix.inst(), new Runnable() {
+                event.setCancelled(true);
+                BukkitScheduler scheduler = Matrix.inst().getServer().getScheduler();
+                scheduler.scheduleSyncDelayedTask((Plugin) Matrix.inst(), new Runnable() {
                     public void run() {
-                      if (event.getMessage().split(" ")[1].toLowerCase().contains("guild")) {
-                        Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), "mv tp " + event
-                            .getPlayer().getName() + " a:FutureGuild");
-                      } else if (event.getMessage().split(" ")[1].toLowerCase().contains("quests")) {
-                        Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), "mv tp " + event
-                            .getPlayer().getName() + " a:FutureQuests");
-                      } else if (event.getMessage().split(" ")[1].toLowerCase().contains("shop")) {
-                        Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), "mv tp " + event
-                            .getPlayer().getName() + " a:FutureShop");
-                      } 
+                        if (event.getMessage().split(" ")[1].toLowerCase().contains("guild")) {
+                            Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv tp " + event
+                                    .getPlayer().getName() + " a:FutureGuild");
+                        } else if (event.getMessage().split(" ")[1].toLowerCase().contains("quests")) {
+                            Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv tp " + event
+                                    .getPlayer().getName() + " a:FutureQuests");
+                        } else if (event.getMessage().split(" ")[1].toLowerCase().contains("shop")) {
+                            Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(), "mv tp " + event
+                                    .getPlayer().getName() + " a:FutureShop");
+                        }
                     }
-                  }, 60L);
-            } else if (event.getMessage().startsWith("/ag")) {
-              event.setCancelled(true);
-              BukkitScheduler scheduler = Matrix.inst().getServer().getScheduler();
-              scheduler.scheduleSyncDelayedTask((Plugin)Matrix.inst(), new Runnable() {
-                    public void run() {
-                      Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), "mv tp " + event.getPlayer().getName() + " a:Future");
-                    }
-                  }, 60L);
+                }, 60L);
             }
+//            } else if (event.getMessage().startsWith("/ag")) {
+//              event.setCancelled(true);
+//              BukkitScheduler scheduler = Matrix.inst().getServer().getScheduler();
+//              scheduler.scheduleSyncDelayedTask((Plugin)Matrix.inst(), new Runnable() {
+//                    public void run() {
+//                      Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), "mv tp " + event.getPlayer().getName() + " a:Future");
+//                    }
+//                  }, 60L);
+//            }
         
         
     }
