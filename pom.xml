@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.18.2-R0.1-SNAPSHOT</version>
+			<version>1.19-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -71,7 +71,7 @@
 			<artifactId>CringleBosses</artifactId>
 			<version>1.18.2</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/util/CringleBosses v1.0.0.jar</systemPath>
+			<systemPath>${project.basedir}/util/CringleBosses v1.0.8.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>LibsDisguises</groupId>
 			<artifactId>LibsDisguises</artifactId>
-			<version>10.0.22</version>
+			<version>10.0.28</version>
 		</dependency>
 	
 		<dependency>
@@ -199,15 +199,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>3.1.0</version>
-				<configuration>
-					<relocations>
-						<relocation>
-							<pattern>org.bstats</pattern>
-							<!-- Replace this with your package! -->
-							<shadedPattern>your.package</shadedPattern>
-						</relocation>
-					</relocations>
-				</configuration>
 				<executions>
 					<execution>
 						<phase>package</phase>
