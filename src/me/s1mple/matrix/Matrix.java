@@ -71,7 +71,7 @@ public class Matrix extends JavaPlugin {
 		//TournamentHandler.init(this);
 		instance.getServer().getPluginManager().registerEvents(new DreamListener(), Matrix.instance);
 		instance.getServer().getPluginManager().registerEvents(new SkillsListener(), Matrix.instance);
-		instance.getServer().getPluginManager().registerEvents(new VPNListener(), Matrix.instance);
+		//instance.getServer().getPluginManager().registerEvents(new VPNListener(), Matrix.instance);
 		instance.getServer().getPluginManager().registerEvents(new PermsListener(), Matrix.instance);
 		instance.getServer().getPluginManager().registerEvents(new RaidListener(), Matrix.instance);
 	}
